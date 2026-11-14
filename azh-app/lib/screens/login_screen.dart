@@ -105,14 +105,25 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> _goToRegister() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const RegisterScreen(),
+Future<void> _goToRegister() async {
+  final newId = await Navigator.of(context).push<String>(
+    MaterialPageRoute(
+      builder: (_) => const RegisterScreen(),
+    ),
+  );
+
+  if (newId != null && mounted) {
+    _usernameCtrl.text = newId;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Account created successfully! Please log in.",
+        ),
       ),
     );
   }
-
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
