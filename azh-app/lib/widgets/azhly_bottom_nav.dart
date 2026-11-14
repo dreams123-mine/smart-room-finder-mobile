@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../theme/app_theme.dart';
 
 /// One nav item. Pass [avatarUrl]/[avatarInitials] instead of [icon] for

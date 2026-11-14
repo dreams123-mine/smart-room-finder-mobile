@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../widgets/class_card.dart';
 
 /// Student / CR-GR "My Classes" body. Each card shows department,

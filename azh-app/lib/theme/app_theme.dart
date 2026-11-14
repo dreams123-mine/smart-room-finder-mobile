@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Single purple accent used across BOTH light and dark mode.
 /// (Previously light mode used pink — this unifies it with dark mode.)

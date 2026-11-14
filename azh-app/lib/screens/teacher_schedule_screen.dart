@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../widgets/class_card.dart';
 
 /// Teacher's "My Schedule" body — shows the teacher's own scheduled

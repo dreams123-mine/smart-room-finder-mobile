@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/roles.dart';
 import '../models/room.dart';
@@ -370,7 +370,7 @@ class _RequestCard extends StatelessWidget {
     ),
     boxShadow: [
       BoxShadow(
-        color: const Color(0xFF8B5CF6).withOpacity(0.25),
+        color: const Color(0xFF8B5CF6).withValues(alpha: 0.25),
         blurRadius: 12,
         offset: const Offset(0, 5),
       ),
