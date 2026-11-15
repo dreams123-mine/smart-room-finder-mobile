@@ -9,7 +9,7 @@ Future<void> showBookingFormSheet(
   BuildContext context, {
   required Room room,
   required String submitLabel,
-  required void Function(String teacherName, String purpose, String subject)
+  required void Function(String teacherName, String purpose, String subject, String day, String startTime, String endTime)
       onSubmit,
 }) {
   return showModalBottomSheet<void>(
@@ -27,7 +27,7 @@ Future<void> showBookingFormSheet(
 class _BookingFormSheet extends StatefulWidget {
   final Room room;
   final String submitLabel;
-  final void Function(String teacherName, String purpose, String subject)
+  final void Function(String teacherName, String purpose, String subject, String day, String startTime, String endTime)
       onSubmit;
 
   const _BookingFormSheet({
@@ -45,6 +45,11 @@ class _BookingFormSheetState extends State<_BookingFormSheet> {
   final _teacherCtrl = TextEditingController();
   final _purposeCtrl = TextEditingController();
   final _subjectCtrl = TextEditingController();
+  String _selectedDay = 'Monday';
+  String _selectedSlot = '13:30-15:00';
+
+  static const _days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  static const _slots = ['13:30-15:00', '15:00-16:30', '16:30-18:00', '18:00-19:30'];
 
   @override
   void dispose() {
@@ -100,6 +105,28 @@ class _BookingFormSheetState extends State<_BookingFormSheet> {
                 style: TextStyle(fontSize: 11.5, color: dimColor),
               ),
               const SizedBox(height: 18),
+              DropdownButtonFormField<String>(
+                value: _selectedDay,
+                decoration: const InputDecoration(labelText: 'Lecture day'),
+                items: _days.map((day) => DropdownMenuItem(
+                  value: day, child: Text(day),
+                )).toList(),
+                onChanged: (value) {
+                  if (value != null) setState(() => _selectedDay = value);
+                },
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                value: _selectedSlot,
+                decoration: const InputDecoration(labelText: 'Lecture time'),
+                items: _slots.map((slot) => DropdownMenuItem(
+                  value: slot, child: Text(slot),
+                )).toList(),
+                onChanged: (value) {
+                  if (value != null) setState(() => _selectedSlot = value);
+                },
+              ),
+              const SizedBox(height: 12),
               TextFormField(
                 controller: _teacherCtrl,
                 decoration: const InputDecoration(labelText: 'Teacher name'),
@@ -132,6 +159,9 @@ class _BookingFormSheetState extends State<_BookingFormSheet> {
                       _teacherCtrl.text.trim(),
                       _purposeCtrl.text.trim(),
                       _subjectCtrl.text.trim(),
+                      _selectedDay,
+                      '${_selectedSlot.split('-')[0]}:00',
+                      '${_selectedSlot.split('-')[1]}:00',
                     );
                   },
                   child: Text(widget.submitLabel),

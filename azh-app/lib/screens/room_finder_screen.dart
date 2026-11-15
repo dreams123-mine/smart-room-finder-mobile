@@ -79,15 +79,20 @@ class _RoomFinderScreenState extends State<RoomFinderScreen> {
     context,
     room: room,
     submitLabel: 'Request to Smart Engine',
-    onSubmit: (teacherName, purpose, subject) async {
+    onSubmit: (teacherName, purpose, subject, day, startTime, endTime) async {
 
       try {
 
         await ApiService().requestBooking(
           studentName: teacherName,
+          teacherName: teacherName,
+          subject: subject,
+          purpose: purpose,
           roomNo: room.roomNo,
-          day: "Monday",
-          timeSlot: room.timeSlot,
+          day: day,
+          startTime: startTime,
+          endTime: endTime,
+          timeSlot: '$startTime-$endTime',
         );
         // Refresh room list immediately
         await fetchRooms();

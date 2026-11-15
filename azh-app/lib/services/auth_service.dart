@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthService {
   static const String baseUrl =
-      "https://ubiquitous-space-fiesta-v6j9pxqwx5q427gw-8081.app.github.dev/api";
+      "https://crispy-meme-jj946jj9qq75hjq4g-8081.app.github.dev/api";
 
   static const FlutterSecureStorage _storage =
       FlutterSecureStorage();
