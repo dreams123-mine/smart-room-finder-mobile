@@ -60,7 +60,7 @@ class _SuggestRoomScreenState extends State<SuggestRoomScreen> {
       context,
       room: room,
       submitLabel: "Send to CR/GR",
-      onSubmit: (teacherName, purpose, subject) async {
+      onSubmit: (teacherName, purpose, subject, day, startTime, endTime) async {
         // SAME ID for both Booking and RoomRequest
         final bookingId =
             "req_${DateTime.now().millisecondsSinceEpoch}_${_requestCounter++}";
