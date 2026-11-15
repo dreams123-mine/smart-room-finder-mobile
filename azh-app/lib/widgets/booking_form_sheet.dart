@@ -106,7 +106,7 @@ class _BookingFormSheetState extends State<_BookingFormSheet> {
               ),
               const SizedBox(height: 18),
               DropdownButtonFormField<String>(
-                value: _selectedDay,
+                initialValue: _selectedDay,
                 decoration: const InputDecoration(labelText: 'Lecture day'),
                 items: _days.map((day) => DropdownMenuItem(
                   value: day, child: Text(day),
@@ -117,7 +117,7 @@ class _BookingFormSheetState extends State<_BookingFormSheet> {
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: _selectedSlot,
+                initialValue: _selectedSlot,
                 decoration: const InputDecoration(labelText: 'Lecture time'),
                 items: _slots.map((slot) => DropdownMenuItem(
                   value: slot, child: Text(slot),
