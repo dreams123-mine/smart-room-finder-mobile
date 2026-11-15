@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import '../models/roles.dart';
 import '../theme/app_theme.dart';
 import 'login_screen.dart';
+import '../services/auth_service.dart';
 
 /// Shared Profile tab — same layout for every role, contents differ
 /// slightly by [role].
@@ -78,13 +79,21 @@ class ProfileScreen extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
-                (route) => false,
-              ),
-              icon: const Icon(Icons.logout, size: 18),
-              label: const Text('Log out'),
-            ),
+  onPressed: () async {
+    await AuthService().logout();
+
+    if (!context.mounted) return;
+
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (_) => const LoginScreen(),
+      ),
+      (route) => false,
+    );
+  },
+  icon: const Icon(Icons.logout, size: 18),
+  label: const Text('Log out'),
+),
           ),
         ],
       ),
