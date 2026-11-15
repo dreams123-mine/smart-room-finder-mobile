@@ -87,8 +87,38 @@ class AuthService {
   }
 
   // RESTORE SAVED SESSION
+    // RESTORE SAVED SESSION
   Future<String?> getSavedToken() {
     return _storage.read(key: _tokenKey);
+  }
+
+  // FETCH CURRENT USER USING SAVED JWT
+  Future<Map<String, dynamic>?> restoreSession() async {
+    final token = await getSavedToken();
+
+    if (token == null || token.isEmpty) {
+      return null;
+    }
+
+    final response = await http.get(
+      Uri.parse("$baseUrl/auth/mobile-me"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    }
+
+    if (response.statusCode == 401 ||
+        response.statusCode == 403) {
+      await logout();
+      return null;
+    }
+
+    throw Exception("Unable to restore session. Please try again.");
   }
 
   // LOGOUT
