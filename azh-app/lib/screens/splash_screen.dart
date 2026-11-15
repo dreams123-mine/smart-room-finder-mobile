@@ -1,11 +1,12 @@
-import 'dart:async';
+import 'dart:ui';
 
 import 'package:material_ui/material_ui.dart';
 
+import '../models/roles.dart';
+import '../services/auth_service.dart';
 import '../theme/app_theme.dart';
+import 'dashboard_screen.dart';
 import 'login_screen.dart';
-
-import 'dart:ui';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -18,38 +19,82 @@ class _SplashScreenState extends State<SplashScreen>
 
   late AnimationController _controller;
 
-  @override
-  void initState() {
-    super.initState();
+@override
+void initState() {
+  super.initState();
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    );
+  _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1200),
+  );
 
+  _controller.forward();
 
+  _checkSessionAndNavigate();
+}
 
-    _controller.forward();
+Future<void> _checkSessionAndNavigate() async {
+  await Future.delayed(const Duration(seconds: 2));
 
-    Timer(const Duration(seconds: 2), () {
-      if (!mounted) return;
+  if (!mounted) return;
 
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 700),
-          pageBuilder: (_, __, ___) => const LoginScreen(),
-          transitionsBuilder: (_, animation, __, child) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
+  Widget destination = const LoginScreen();
+
+  try {
+    final authService = AuthService();
+    final userData = await authService.restoreSession();
+
+    if (userData != null) {
+      final roleString = userData['role']?.toString().toUpperCase();
+
+      AzhlyRole? role;
+
+      switch (roleString) {
+        case 'STUDENT':
+          role = AzhlyRole.student;
+          break;
+
+        case 'TEACHER':
+          role = AzhlyRole.teacher;
+          break;
+
+        case 'CR_GR':
+          role = AzhlyRole.crGr;
+          break;
+      }
+
+      if (role != null) {
+        destination = DashboardScreen(
+          role: role,
+          userData: {
+            ...userData,
+            'adminName':
+                userData['fullName'] ?? userData['username'] ?? 'User',
           },
-        ),
-      );
-    });
+        );
+      }
+    }
+  } catch (e) {
+    // Keep the saved token if the server is temporarily unavailable.
+    destination = const LoginScreen();
   }
 
+  if (!mounted) return;
+
+  Navigator.pushReplacement(
+    context,
+    PageRouteBuilder(
+      transitionDuration: const Duration(milliseconds: 700),
+      pageBuilder: (_, __, ___) => destination,
+      transitionsBuilder: (_, animation, __, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+    ),
+  );
+}
   @override
   void dispose() {
     _controller.dispose();
