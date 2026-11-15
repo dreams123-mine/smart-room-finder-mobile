@@ -109,8 +109,13 @@ class ApiService {
 
   Future<Map<String, dynamic>> requestBooking({
     required String studentName,
+    required String teacherName,
+    required String subject,
+    required String purpose,
     required String roomNo,
     required String day,
+    required String startTime,
+    required String endTime,
     required String timeSlot,
   }) async {
     final response = await http.post(
@@ -120,8 +125,13 @@ class ApiService {
       },
       body: jsonEncode({
         "studentName": studentName,
+        "teacherName": teacherName,
+        "subject": subject,
+        "purpose": purpose,
         "roomNo": roomNo,
         "day": day,
+        "bookingStartTime": startTime,
+        "bookingEndTime": endTime,
         "timeSlot": timeSlot,
       }),
     );
@@ -130,7 +140,7 @@ class ApiService {
       return jsonDecode(response.body);
     }
 
-    throw Exception("Booking Failed");
+    throw Exception("Booking Failed: ${response.statusCode} - ${response.body}");
   }
 
   // ==============================
