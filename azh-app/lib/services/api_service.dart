@@ -1,8 +1,21 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/room.dart' show Room;
+import 'auth_service.dart';
 
 class ApiService {
+  final AuthService _authService = AuthService();
+
+  Future<Map<String, String>> _authHeaders() async {
+    final token = await _authService.getSavedToken();
+
+    return {
+      "Content-Type": "application/json",
+      if (token != null && token.isNotEmpty)
+        "Authorization": "Bearer $token",
+    };
+  }
+
   
  
   // ==============================
@@ -92,6 +105,7 @@ class ApiService {
   Future<List<Room>> getRooms() async {
     final response = await http.get(
       Uri.parse("$baseUrl/rooms"),
+      headers: await _authHeaders(),
     );
 
     if (response.statusCode == 200) {
@@ -120,9 +134,7 @@ class ApiService {
   }) async {
     final response = await http.post(
       Uri.parse("$baseUrl/bookings/request"),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: await _authHeaders(),
       body: jsonEncode({
         "studentName": studentName,
         "teacherName": teacherName,
@@ -152,6 +164,7 @@ class ApiService {
   ) async {
     final response = await http.get(
       Uri.parse("$baseUrl/bookings/student/$studentName"),
+      headers: await _authHeaders(),
     );
 
     if (response.statusCode == 200) {
@@ -168,6 +181,7 @@ class ApiService {
   Future<List<dynamic>> getAllBookings() async {
     final response = await http.get(
       Uri.parse("$baseUrl/bookings/all"),
+      headers: await _authHeaders(),
     );
 
     if (response.statusCode == 200) {
@@ -186,7 +200,8 @@ class ApiService {
     String message,
   ) async {
     final response = await http.post(
-      Uri.parse("$baseUrl/bookings/review/$id?action=APPROVE&message=$message"),
+      Uri.parse("$baseUrl/bookings/review/$id?action=APPROVE&message=${Uri.encodeQueryComponent(message)}"),
+      headers: await _authHeaders(),
     );
 
     return response.body;
@@ -201,7 +216,8 @@ class ApiService {
     String message,
   ) async {
     final response = await http.post(
-      Uri.parse("$baseUrl/bookings/review/$id?action=REJECT&message=$message"),
+      Uri.parse("$baseUrl/bookings/review/$id?action=REJECT&message=${Uri.encodeQueryComponent(message)}"),
+      headers: await _authHeaders(),
     );
 
     return response.body;
@@ -214,6 +230,7 @@ class ApiService {
   Future<void> deleteBooking(int id) async {
     await http.delete(
       Uri.parse("$baseUrl/bookings/$id"),
+      headers: await _authHeaders(),
     );
   }
 }
